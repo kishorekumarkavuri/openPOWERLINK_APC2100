@@ -140,6 +140,15 @@
          type = "boolean";
       }
    }
+   element Pcie_subsystem.pcp_to_pcie_sub_config
+   {
+   element remote_update
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
    element pcp_0
    {
       datum _sortIndex
@@ -195,19 +204,6 @@
          type = "boolean";
       }
    }
-   element status_led_pio
-   {
-      datum _sortIndex
-      {
-         value = "15";
-         type = "int";
-      }
-      datum sopceditor_expanded
-      {
-         value = "0";
-         type = "boolean";
-      }
-   }
    element sysid
    {
       datum _sortIndex
@@ -231,6 +227,7 @@
       datum sopceditor_expanded
       {
          value = "0";
+         value = "1";
          type = "boolean";
       }
    }
@@ -381,6 +378,7 @@
  <interface
    name="pcie_subsystem_pcie_reconfig_fromgxb_0"
    internal="Pcie_subsystem.pcie_reconfig_fromgxb_0" />
+ <interface name="pcie_ip_test_out" internal="Pcie_subsystem.pcie_ip_test_out" />
  <interface
    name="pcie_subsystem_pcie_reconfig_togxb"
    internal="Pcie_subsystem.pcie_reconfig_togxb" />
@@ -418,16 +416,6 @@
  <interface
    name="openmac_0_mactimerout"
    internal="openmac_0.macTimerOut"
-   type="conduit"
-   dir="end" />
- <interface
-   name="status_led_pio"
-   internal="status_led_pio.external_connection"
-   type="conduit"
-   dir="end" />
- <interface
-   name="openmac_0_pktactivity"
-   internal="openmac_0.pktActivity"
    type="conduit"
    dir="end" />
  <interface
@@ -568,7 +556,7 @@
   <parameter name="gui_tmrCount" value="1" />
   <parameter name="gui_tmrPulseEn" value="false" />
   <parameter name="gui_tmrPulseWdt" value="10" />
-  <parameter name="gui_actEn" value="true" />
+  <parameter name="gui_actEn" value="false" />
   <parameter name="gui_sdcEn" value="true" />
   <parameter name="AUTO_DMACLK_CLOCK_RATE" value="100000000" />
   <parameter name="AUTO_PKTCLK_CLOCK_RATE" value="-1" />
@@ -596,8 +584,8 @@
   <parameter name="AUTO_PCIE_IP_FIXEDCLK_CLOCK_DOMAIN" value="2" />
   <parameter name="AUTO_PCIE_IP_FIXEDCLK_RESET_DOMAIN" value="2" />
   <parameter name="vendor_id" value="5751" />
-  <parameter name="device_id" value="59401" />
-  <parameter name="revision_id" value="1" />
+  <parameter name="device_id" value="58687" />
+  <parameter name="revision_id" value="5" />
   <parameter name="class_code" value="557104" />
   <parameter name="subsystem_vendor_id" value="5751" />
   <parameter name="subsystem_id" value="58658" />
@@ -607,42 +595,6 @@
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
- </module>
- <module
-   kind="altera_avalon_pio"
-   version="13.0.1.99.2"
-   enabled="1"
-   name="status_led_pio">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="true" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="direction" value="Output" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="2" />
-  <parameter name="clockRate" value="50000000" />
- </module>
- <module
-   kind="altera_avalon_pio"
-   version="13.0.1.99.2"
-   enabled="1"
-   name="testport_pio">
-  <parameter name="bitClearingEdgeCapReg" value="false" />
-  <parameter name="bitModifyingOutReg" value="false" />
-  <parameter name="captureEdge" value="false" />
-  <parameter name="direction" value="Output" />
-  <parameter name="edgeType" value="RISING" />
-  <parameter name="generateIRQ" value="false" />
-  <parameter name="irqType" value="LEVEL" />
-  <parameter name="resetValue" value="0" />
-  <parameter name="simDoTestBenchWiring" value="false" />
-  <parameter name="simDrivenValue" value="0" />
-  <parameter name="width" value="8" />
-  <parameter name="clockRate" value="50000000" />
  </module>
  <connection
    kind="reset"
@@ -864,25 +816,6 @@
    version="13.0"
    start="clk50.clk"
    end="Pcie_subsystem.clk_50" />
- <connection
-   kind="clock"
-   version="13.0"
-   start="clk50.clk"
-   end="status_led_pio.clk" />
- <connection
-   kind="reset"
-   version="13.0"
-   start="pcie_hard_ip_0.pcie_core_reset"
-   end="status_led_pio.reset" />
- <connection
-   kind="avalon"
-   version="13.0"
-   start="pcie_hard_ip_0.bar1"
-   end="status_led_pio.s1">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x1020" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
  <connection kind="clock" version="13.0" start="clk50.clk" end="testport_pio.clk" />
  <connection
    kind="reset"

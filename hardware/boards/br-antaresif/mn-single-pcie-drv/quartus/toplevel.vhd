@@ -142,7 +142,6 @@ architecture rtl of toplevel is
             openmac_0_rmii_rxError                      : in    std_logic_vector(0 downto 0);
             openmac_0_rmii_rxCrsDataValid               : in    std_logic_vector(0 downto 0);
             openmac_0_rmii_rxData                       : in    std_logic_vector(1 downto 0);
-            openmac_0_pktactivity_export                : out   std_logic;
             epcs_flash_dclk                             : out   std_logic;
             epcs_flash_sce                              : out   std_logic;
             epcs_flash_sdo                              : out   std_logic;
@@ -174,9 +173,9 @@ architecture rtl of toplevel is
             pcie_ip_refclk_export                      : in    std_logic                     := 'X'; 
             pcp_0_cpu_resetrequest_resetrequest         : in    std_logic;
             pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
-            status_led_pio_export                       : out   std_logic_vector(1 downto 0);
-            testport_pio_export                         : out   std_logic_vector(7 downto 0)
-        );
+            pcie_ip_powerdown_pll_powerdown            : in    std_logic                     := 'X';             -- pll_powerdown
+            pcie_ip_powerdown_gxb_powerdown            : in    std_logic                     := 'X'           -- gxb_powerdown
+            
             pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
             pcie_ip_powerdown_pll_powerdown            : in    std_logic                     := 'X';             -- pll_powerdown
             pcie_ip_powerdown_gxb_powerdown            : in    std_logic                     := 'X'           -- gxb_powerdown
@@ -214,13 +213,6 @@ architecture rtl of toplevel is
     signal reconfigToGxb    : std_logic_vector(3 downto 0);
     signal reconfigFromGxb  : std_logic_vector(4 downto 0);
     signal reconfigBusy     : std_logic;
-
-    signal plkSeLed         : std_logic_vector(1 downto 0);
-    alias  plkStatusLed     : std_logic is plkSeLed(0);
-    alias  plkErrorLed      : std_logic is plkSeLed(1);
-
-    signal macActivity      : std_logic;
-    signal plkActivity      : std_logic;
 
     signal testport                 : std_logic_vector(7 downto 0);
     alias  testportEnable           : std_logic is testport(7);
