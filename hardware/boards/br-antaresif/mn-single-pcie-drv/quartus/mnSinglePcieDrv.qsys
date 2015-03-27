@@ -121,6 +121,11 @@
    }
    element openmac_0.macTimer
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
          value = "24576";
@@ -272,7 +277,7 @@
  <parameter name="projectName">mn-single-pcie-drv.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1427108211716" />
+ <parameter name="timeStamp" value="1427431738658" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk50" internal="clk50.clk_in" type="clock" dir="end" />
@@ -413,11 +418,6 @@
    type="conduit"
    dir="end" />
  <interface name="pcie_ip_test_out" internal="Pcie_subsystem.pcie_ip_test_out" />
- <interface
-   name="openmac_0_mactimerout"
-   internal="openmac_0.macTimerOut"
-   type="conduit"
-   dir="end" />
  <interface
    name="testport_pio"
    internal="testport_pio.external_connection"
@@ -816,20 +816,12 @@
    version="13.0"
    start="clk50.clk"
    end="Pcie_subsystem.clk_50" />
- <connection kind="clock" version="13.0" start="clk50.clk" end="testport_pio.clk" />
  <connection
-   kind="reset"
+   kind="interrupt"
    version="13.0"
-   start="clk25.clk_reset"
-   end="testport_pio.reset" />
- <connection
-   kind="avalon"
-   version="13.0"
-   start="pcp_0.slow_bridge"
-   end="testport_pio.s1">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0xe000" />
-  <parameter name="defaultConnection" value="false" />
+   start="Pcie_subsystem.sync_irq"
+   end="openmac_0.timerIrq">
+  <parameter name="irqNumber" value="0" />
  </connection>
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
