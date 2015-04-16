@@ -10,6 +10,7 @@
 --
 --    (c) B&R, 2014
 --    (c) 2015, Bernecker+Rainer Industrie-Elektronik Ges.m.b.H. (B&R)
+--    Copyright (c) 2015, Kalycito Infotech Private Limited
 --
 --    Redistribution and use in source and binary forms, with or without
 --    modification, are permitted provided that the following conditions
@@ -175,7 +176,10 @@ architecture rtl of toplevel is
             pcp_0_cpu_resetrequest_resetrequest         : in    std_logic;
             pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
             pcie_ip_powerdown_pll_powerdown             : in    std_logic                     := 'X';             -- pll_powerdown
-            pcie_ip_powerdown_gxb_powerdown             : in    std_logic                     := 'X'           -- gxb_powerdown
+            pcie_ip_powerdown_gxb_powerdown             : in    std_logic                     := 'X' ;          -- gxb_powerdown
+            led_external_connection_export              : out   std_logic_vector(1 downto 0);
+            openmac_0_mactimerout_export                : out   std_logic_vector(0 downto 0);                     -- export
+            openmac_0_pktactivity_export                : out   std_logic                                         -- export
             
             pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
             pcie_ip_powerdown_pll_powerdown            : in    std_logic                     := 'X';             -- pll_powerdown
@@ -215,6 +219,14 @@ architecture rtl of toplevel is
     signal reconfigFromGxb  : std_logic_vector(4 downto 0);
     signal reconfigBusy     : std_logic;
 
+    
+    signal plkSeLed         : std_logic_vector(1 downto 0);
+    alias  plkStatusLed     : std_logic is plkSeLed(0);
+    alias  plkErrorLed      : std_logic is plkSeLed(1);
+
+    signal macActivity      : std_logic;
+    signal plkActivity      : std_logic;
+
     signal testport                 : std_logic_vector(7 downto 0);
     alias  testportEnable           : std_logic is testport(7);
     alias  testportPlkActLed        : std_logic is testport(5);
@@ -223,14 +235,40 @@ architecture rtl of toplevel is
     alias  testportReservedLed      : std_logic is testport(2);
     alias  testportStatLedRot       : std_logic is testport(1);
     alias  testportStatLedGruen     : std_logic is testport(0);
+
 begin
     oRmiiRefClk <= clk50; --FIXME: Use phase shift clock?
 
     nConfig_PG_CRC <= 'Z'; --FIXME: Connect to remote update control for factory reconfig!
+    
+    ----------------------------------------------------------------------------
+    -- LEDs
+    --FIXME: Mismatch data sheet LEDs / schematic
 
     ----------------------------------------------------------------------------
     -- LEDs
     --FIXME: Mismatch data sheet LEDs / schematic
+
+    plkActivity <= iLinkPlkPhy and not macActivity; -- On = Link / Blink = Activity
+
+    -- LED RJ45
+    onPlkActLed         <=  not testportPlkActLed when testportEnable = cActivated else
+                            not plkActivity;
+    onPlkLinkLed        <=  not testportPlkLinkLed when testportEnable = cActivated else
+                            not plkStatusLed;
+
+    -- LED pair red/green L2
+    onPlkActLedGelb     <=  not testportPlkActLedGelb when testportEnable = cActivated else
+                            not plkActivity;
+    onReserveLed        <=  not testportReservedLed when testportEnable = cActivated else
+                            cnInactivated; -- Unused
+
+    -- LED pair red/green L3
+    onPlkStatLedRot     <=  not testportStatLedRot when testportEnable = cActivated else
+                            not plkErrorLed;
+    onPlkStatLedGruen   <=  not testportStatLedGruen when testportEnable = cActivated else
+                            not plkStatusLed;
+    ----------------------------------------------------------------------------
 
     plkActivity <= iLinkPlkPhy and not macActivity; -- On = Link / Blink = Activity
 
@@ -307,9 +345,11 @@ begin
             pcie_ip_refclk_export                       => iPCIe_RefClk_p,
             pcie_ip_powerdown_pll_powerdown             => cInactivated ,  
             pcie_ip_powerdown_gxb_powerdown             => cInactivated,
-            pcie_ip_pcie_rstn_export                    => pllLocked
-
-        );
+            pcie_ip_pcie_rstn_export                    => pllLocked,
+            led_external_connection_export              => plkSeLed,
+            openmac_0_mactimerout_export                => open,
+            openmac_0_pktactivity_export                => macActivity
+            );
 
     -- Pll Instance
     pllInst : pll
