@@ -179,11 +179,11 @@ architecture rtl of toplevel is
             pcie_ip_powerdown_gxb_powerdown             : in    std_logic                     := 'X' ;          -- gxb_powerdown
             led_external_connection_export              : out   std_logic_vector(1 downto 0);
             openmac_0_mactimerout_export                : out   std_logic_vector(0 downto 0);                     -- export
-            openmac_0_pktactivity_export                : out   std_logic                                         -- export
+            openmac_0_pktactivity_export                : out   std_logic                                        -- export
             
-            pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
-            pcie_ip_powerdown_pll_powerdown            : in    std_logic                     := 'X';             -- pll_powerdown
-            pcie_ip_powerdown_gxb_powerdown            : in    std_logic                     := 'X'           -- gxb_powerdown
+            --pcp_0_cpu_resetrequest_resettaken           : out   std_logic;
+           -- pcie_ip_powerdown_pll_powerdown            : in    std_logic                     := 'X';             -- pll_powerdown
+           -- pcie_ip_powerdown_gxb_powerdown            : in    std_logic                     := 'X'           -- gxb_powerdown
             );
     end component mnSinglePcieDrv;
 
@@ -269,27 +269,27 @@ begin
     onPlkStatLedGruen   <=  not testportStatLedGruen when testportEnable = cActivated else
                             not plkStatusLed;
     ----------------------------------------------------------------------------
-
-    plkActivity <= iLinkPlkPhy and not macActivity; -- On = Link / Blink = Activity
-
-    -- LED RJ45
-    onPlkActLed         <=  not testportPlkActLed when testportEnable = cActivated else
-                            not plkActivity;
-    onPlkLinkLed        <=  not testportPlkLinkLed when testportEnable = cActivated else
-                            not plkStatusLed;
-
-    -- LED pair red/green L2
-    onPlkActLedGelb     <=  not testportPlkActLedGelb when testportEnable = cActivated else
-                            not plkActivity;
-    onReserveLed        <=  not testportReservedLed when testportEnable = cActivated else
-                            cnInactivated; -- Unused
-
-    -- LED pair red/green L3
-    onPlkStatLedRot     <=  not testportStatLedRot when testportEnable = cActivated else
-                            not plkErrorLed;
-    onPlkStatLedGruen   <=  not testportStatLedGruen when testportEnable = cActivated else
-                            not plkStatusLed;
-    ----------------------------------------------------------------------------
+--
+--    plkActivity <= iLinkPlkPhy and not macActivity; -- On = Link / Blink = Activity
+--
+--    -- LED RJ45
+--    onPlkActLed         <=  not testportPlkActLed when testportEnable = cActivated else
+--                            not plkActivity;
+--    onPlkLinkLed        <=  not testportPlkLinkLed when testportEnable = cActivated else
+--                            not plkStatusLed;
+--
+--    -- LED pair red/green L2
+--    onPlkActLedGelb     <=  not testportPlkActLedGelb when testportEnable = cActivated else
+--                            not plkActivity;
+--    onReserveLed        <=  not testportReservedLed when testportEnable = cActivated else
+--                            cnInactivated; -- Unused
+--
+--    -- LED pair red/green L3
+--    onPlkStatLedRot     <=  not testportStatLedRot when testportEnable = cActivated else
+--                            not plkErrorLed;
+--    onPlkStatLedGruen   <=  not testportStatLedGruen when testportEnable = cActivated else
+--                            not plkStatusLed;
+--    ----------------------------------------------------------------------------
 
     inst : component mnSinglePcieDrv
         port map (

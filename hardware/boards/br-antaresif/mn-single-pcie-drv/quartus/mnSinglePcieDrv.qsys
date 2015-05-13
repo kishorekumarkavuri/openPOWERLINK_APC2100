@@ -145,15 +145,6 @@
          type = "boolean";
       }
    }
-   element Pcie_subsystem.pcp_to_pcie_sub_config
-   {
-   element remote_update
-   {
-      datum _sortIndex
-      {
-         value = "7";
-         type = "int";
-      }
    element pcp_0
    {
       datum _sortIndex
@@ -232,7 +223,6 @@
       datum sopceditor_expanded
       {
          value = "0";
-         value = "1";
          type = "boolean";
       }
    }
@@ -277,7 +267,7 @@
  <parameter name="projectName">mn-single-pcie-drv.qpf</parameter>
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="1" />
- <parameter name="timeStamp" value="1428907474168" />
+ <parameter name="timeStamp" value="1431409716259" />
  <parameter name="useTestBenchNamingPattern" value="false" />
  <instanceScript></instanceScript>
  <interface name="clk50" internal="clk50.clk_in" type="clock" dir="end" />
@@ -417,7 +407,6 @@
    internal="Pcie_subsystem.pcie_ip_powerdown"
    type="conduit"
    dir="end" />
- <interface name="pcie_ip_test_out" internal="Pcie_subsystem.pcie_ip_test_out" />
  <interface
    name="openmac_0_mactimerout"
    internal="openmac_0.macTimerOut"
@@ -808,15 +797,6 @@
    start="clk50.clk_reset"
    end="Pcie_subsystem.reset" />
  <connection
-   kind="avalon"
-   version="13.0"
-   start="Pcie_subsystem.pcie_to_bar1_config_bridge"
-   end="sram_0.uas">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
    kind="clock"
    version="13.0"
    start="clk50.clk"
@@ -827,6 +807,15 @@
    start="Pcie_subsystem.sync_irq"
    end="openmac_0.timerIrq">
   <parameter name="irqNumber" value="0" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="13.0"
+   start="Pcie_subsystem.pcie_bar0_config_bridge"
+   end="sram_0.uas">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
  </connection>
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
